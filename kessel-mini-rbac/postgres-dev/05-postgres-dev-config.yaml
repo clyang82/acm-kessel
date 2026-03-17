@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acm-kessel-postgres-config
+  namespace: acm-kessel-mini-rbac
+data:
+  postgresql.conf: |
+    max_connections = 100
+    listen_addresses = '*'
+    shared_buffers = 128MB
+    work_mem = 4MB
+    wal_level = logical
+    log_destination = 'stderr'
+    track_commit_timestamp = on

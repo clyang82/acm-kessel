@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: acm-kessel-kafka-dev
+
+namespace: acm-kessel-mini-rbac
+
+resources:
+  - 01-zookeeper.yaml
+  - 02-kafka.yaml
+  - 03-create-topics.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: acm-kessel
+  app.kubernetes.io/managed-by: kustomize

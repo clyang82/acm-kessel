@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: acm-kessel-mini-rbac
+
+namespace: acm-kessel-mini-rbac
+
+resources:
+  # PostgreSQL (Simple dev deployment with WAL enabled)
+  - postgres-dev/01-postgres-dev-secret.yaml
+  - postgres-dev/02-postgres-dev-pvc.yaml
+  - postgres-dev/05-postgres-dev-config.yaml
+  - postgres-dev/03-postgres-dev-deployment.yaml
+  - postgres-dev/04-postgres-dev-service.yaml
+
+  # Kafka (Simple dev deployment - for inventory consumer)
+  - kafka-dev/01-zookeeper.yaml
+  - kafka-dev/02-kafka.yaml
+  - kafka-dev/03-create-topics.yaml
+
+  # Debezium (Kafka Connect with CDC)
+  - debezium/01-debezium-deployment.yaml
+  - debezium/02-debezium-service.yaml
+  - debezium/03-debezium-connector-config.yaml
+  - debezium/04-debezium-connector-setup-job.yaml
+
+  # SpiceDB Operator (required for SpiceDB)
+  - operator/01-spicedb-operator.yaml
+
+  # SpiceDB Cluster
+  - spicedb/02-spicedb-secret.yaml
+  - spicedb/03-spicedb-cluster.yaml
+
+  # Relations API
+  - relations-api/01-relations-api-configmap-schema.yaml
+  - relations-api/02-relations-api-secret-config.yaml
+  - relations-api/03-relations-api-deployment.yaml
+  - relations-api/04-relations-api-service.yaml
+
+  # Inventory API
+  - inventory-api/01-inventory-api-configmap-schema-cache.yaml
+  - inventory-api/02-inventory-api-secret-config.yaml
+  - inventory-api/03-inventory-api-deployment.yaml
+  - inventory-api/04-inventory-api-service.yaml
+
+  # Mini RBAC (replaces full RBAC stack)
+  - mini-rbac/00-mini-rbac-configmap.yaml
+  - mini-rbac/01-mini-rbac-deployment.yaml
+  - mini-rbac/02-mini-rbac-service.yaml
+
+commonLabels:
+  app.kubernetes.io/part-of: acm
+  app.kubernetes.io/managed-by: kustomize
