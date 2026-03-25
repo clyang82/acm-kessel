@@ -1,0 +1,47 @@
+version 0.1
+namespace acm
+
+import rbac
+
+public type k8s_cluster {
+    private relation workspace: [ExactlyOne rbac.workspace]
+    private relation binding: [Any rbac.role_binding]
+
+    // These permission comes from the role-binding OR from the workspace
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_cluster', verb:'read', v2_perm:'acm_cluster_view')
+    relation view: binding.acm_cluster_view or workspace.acm_cluster_view
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_cluster', verb:'write', v2_perm:'acm_cluster_edit')
+    relation edit: binding.acm_cluster_edit or workspace.acm_cluster_edit
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_cluster', verb:'create', v2_perm:'acm_cluster_new')
+    relation new: binding.acm_cluster_new or workspace.acm_cluster_new
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_cluster', verb:'create_vm', v2_perm:'acm_vm_new')
+    relation vm_new: binding.acm_vm_new or workspace.acm_vm_new
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_cluster', verb:'create_application', v2_perm:'acm_application_new')
+    relation application_new: binding.acm_application_new or workspace.acm_application_new
+}
+
+public type k8s_namespace {
+    private relation workspace: [ExactlyOne rbac.workspace]
+    private relation k8s_cluster: [ExactlyOne k8s_cluster]
+    private relation binding: [Any rbac.role_binding]
+
+    // These permission comes from the role-binding OR from the k8s_cluster
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_namespace', verb:'read', v2_perm:'acm_namespace_view')
+    relation namespace_view: binding.acm_namespace_view or k8s_cluster.view or workspace.acm_cluster_view
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_namespace', verb:'write', v2_perm:'acm_namespace_edit')
+    relation namespace_edit: binding.acm_namespace_edit or k8s_cluster.edit or workspace.acm_cluster_edit
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_namespace', verb:'create', v2_perm:'acm_namespace_new')
+    relation namespace_new: binding.acm_namespace_new or k8s_cluster.new or workspace.acm_cluster_new
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_namespace', verb:'create_vm', v2_perm:'acm_namespace_vm_new')
+    relation vm_new: binding.acm_namespace_vm_new or k8s_cluster.vm_new or workspace.acm_vm_new
+
+    @rbac.add_v1_based_permission(app:'acm', resource:'k8s_namespace', verb:'create_application', v2_perm:'acm_namespace_application_new')
+    relation application_new: binding.acm_namespace_application_new or k8s_cluster.application_new or workspace.acm_application_new
+}
