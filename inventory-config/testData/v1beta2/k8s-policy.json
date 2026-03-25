@@ -1,0 +1,21 @@
+{
+    "type": "k8s_policy",
+    "reporterType": "ACM",
+    "reporterInstanceId": "57a317b1-4040-4c26-8d41-dd589ba1d2eb",
+    "representations": {
+      "metadata": {
+        "localResourceId": "cdcebe29-67fb-4ac6-ba03-703a22ff4bc0",
+        "apiHref": "https://apiHref.com/",
+        "consoleHref": "https://www.console.com/",
+        "reporterVersion": "0.4.12"
+      },
+      "common": {
+        "workspace_id": "1c0753fe-48c1-44d8-823c-95d04cff5f91"
+      },
+      "reporter": {
+        "disabled": true,
+        "severity": "CRITICAL"
+      }
+    }
+}
+
