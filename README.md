@@ -14,10 +14,20 @@ kind create cluster --name kessel-mini-rbac
 2. **Deploy the stack**
 ```bash
 cd kessel-mini-rbac
-oc apply -k . --server-side
+oc apply -f operator/01-spicedbclusters.authzed.com-crd.yaml
+oc apply -k .
+```
+Note: Wait for all pods to be running before proceeding.*
+
+3. **Expose ports via port-forward**
+```bash
+oc port-forward --address 0.0.0.0 svc/acm-kessel-inventory-api 9081:9000 -n acm-kessel-mini-rbac &
+oc port-forward --address 0.0.0.0 svc/acm-kessel-mini-rbac 8085:8080 -n acm-kessel-mini-rbac &
+oc port-forward --address 0.0.0.0 svc/acm-kessel-spicedb 50051:50051 -n acm-kessel-mini-rbac &
+oc port-forward --address 0.0.0.0 svc/acm-kessel-relations-api 9082:9000 -n acm-kessel-mini-rbac &
 ```
 
-3. **Run end-to-end tests**
+4. **Run end-to-end tests**
 ```bash
 cd kessel-mini-rbac
 ./acm-e2e.sh
